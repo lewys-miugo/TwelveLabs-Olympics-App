@@ -68,6 +68,7 @@ def add_custom_class(name, prompts):
     st.session_state.new_class_added = True
 
 # Utility Function to classify all the videos in the specified Index
+# Utility Function to classify all the videos in the specified Index
 def classify_videos(selected_classes):
     url = "https://api.twelvelabs.io/v1.2/classify/bulk"
     

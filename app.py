@@ -67,9 +67,9 @@ def add_custom_class(name, prompts):
     st.session_state.custom_classes = custom_classes
     st.session_state.new_class_added = True
 
-# Utitlity Function to classify all the videos in the specified Index
-def classify_videos(selected_classes: List[Dict]) -> Dict:
-    url = f"{BASE_URL}/classify/bulk"
+# Utility Function to classify all the videos in the specified Index
+def classify_videos(selected_classes):
+    url = "https://api.twelvelabs.io/v1.2/classify/bulk"
     
     payload = {
         "page_limit": 10,

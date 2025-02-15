@@ -11,6 +11,7 @@ load_dotenv()
 
 # Get the API Key from the Dashboard - https://playground.twelvelabs.io/dashboard/api-key
 API_KEY = os.getenv("API_KEY")
+BASE_URL = "https://api.twelvelabs.io/v1.2"
 
 # Create the INDEX ID as specified in the README.md and get the INDEX_ID
 INDEX_ID = os.getenv("INDEX_ID")
@@ -67,13 +68,32 @@ def add_custom_class(name, prompts):
     st.session_state.new_class_added = True
 
 # Utitlity Function to classify all the videos in the specified Index
-def classify_videos(selected_classes):
-    return client.classify.index(
-        index_id=INDEX_ID,
-        options=["visual"],
-        classes=selected_classes,
-        include_clips=True
-    )
+def classify_videos(selected_classes: List[Dict]) -> Dict:
+    url = f"{BASE_URL}/classify/bulk"
+    
+    payload = {
+        "page_limit": 10,
+        "include_clips": True,
+        "threshold": 75,
+        "show_detailed_score": True,
+        "options": ["conversation"],
+        "conversation_option": "semantic",
+        "classes": selected_classes
+    }
+    
+    headers = {
+        "accept": "application/json",
+        "Content-Type": "application/json",
+        "x-api-key": API_KEY
+    }
+    
+    try:
+        response = requests.post(url, json=payload, headers=headers)
+        response.raise_for_status()
+        return response.json()
+    except requests.exceptions.RequestException as e:
+        st.error(f"API Error: {str(e)}")
+        return None
 
 # To get the video urls from the resultant video id
 def get_video_urls(video_ids):

@@ -14,7 +14,7 @@ load_dotenv()
 def keep_alive():
     print("Keep-alive ping executed at:", time.strftime("%Y-%m-%d %H:%M:%S"))
     try:
-        app_url = os.getenv("STREAMLIT_APP_URL", "https://example.com")
+        app_url = os.getenv("STREAMLIT_APP_URL", "http://twelvelabs-olympics-app.streamlit.app/")
         requests.get(app_url, timeout=10)
         print("Successfully pinged the app")
     except Exception as e:

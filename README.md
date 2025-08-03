@@ -89,7 +89,7 @@ Clone the project
 Step 1 -
 
 ```bash
-git clone https://github.com/Hrishikesh332/TwelveLabs-Olympics-App.git
+git clone https://github.com/lewys-miugo/TwelveLabs-Olympics-App.git
 ```
 
 Step 2  -
@@ -97,7 +97,7 @@ Step 2  -
 Install dependencies:
 
 ```bash
- cd TwelveLabs-Interview-App
+ cd TwelveLabs-Olympics-App
  
  pip install -r requirements.txt
 ```
@@ -119,7 +119,7 @@ Get your API Key from the [Twelve Labs Dashboard](https://playground.twelvelabs.
 Find your INDEX_ID in the URL of your created [index](https://playground.twelvelabs.io/indexes/{index_id})
 
 Step 5 -
-Configure the application with your API credentials.
+Configure the application with your API credentials by creating .env and adding API_KEY, INDEX_KEY and STREAMLIT_APP_URL=http://localhost:8501/ NB: When hosting with Streamlit remember to put them in TOML format.
 
 Step 6 -
 
@@ -139,7 +139,7 @@ Run the Server -
 
 ## Usecases
 
-🔍**Video Search Enginen:** Create a searchable database of video content, allowing users to find specific scenes or topics within large video collections.
+🔍**Video Search Engine:** Create a searchable database of video content, allowing users to find specific scenes or topics within large video collections.
 
 🎥**Security Footage Analyzer**
 Detect and categorize specific events or behaviors in security camera footage.
@@ -155,4 +155,27 @@ If you have any feedback, please reach out to us at **hriskikesh.yadav332@gmail.
 ## License
 
 [![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
+
+## 👨‍💻 About the Developer
+
+**Lewys Miugo**
+- 📧 Email: lewysmiugo@gmail.com
+- 🐙 GitHub: [@lewys-miugo](https://github.com/lewys-miugo)
+- 💼 LinkedIn: [Connect with me](https://linkedin.com/in/lewys-miugo)
+
+## 🙏 Credits
+
+This project is based on the original work by **Hrishikesh Yadav**:
+- 📧 Original Author: hriskikesh.yadav332@gmail.com
+- 🐙 Original Repository: [TwelveLabs-Olympics-App](https://github.com/Hrishikesh332/TwelveLabs-Olympics-App)
+- 💼 LinkedIn: [@hrishikesh332](https://linkedin.com/in/hrishikesh332)
+
+Built with ❤️ using Twelve Labs AI and Streamlit
+
+---
+
+<div align="center">
+  <p>⭐ Star this repository if you found it helpful!</p>
+  <p>Made with 🏅</p>
+</div>
 

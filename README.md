@@ -4,14 +4,14 @@
   <p align="center">
     Categorize Olympic sports using video clips with Twelve Labs
     <br />
-    <a href="https://github.com/Hrishikesh332/TwelveLabs-Olympics-App"><strong>Explore the docs »</strong></a>
+    <a href="https://github.com/lewys-miugo/TwelveLabs-Olympics-App"><strong>Explore the docs »</strong></a>
     <br />
     <br />
-    <a href="https://twelvelabs-olympics-app.streamlit.app/">View Demo</a>
+    <a href="https://sports-detector.streamlit.app/">View Demo</a>
     ·
-    <a href="https://github.com/Hrishikesh332/TwelveLabs-Olympics-App/issues">Report Bug</a>
+    <a href="https://github.com/lewys-miugo/TwelveLabs-Olympics-App/issues">Report Bug</a>
     ·
-    <a href="https://github.com/Hrishikesh332/TwelveLabs-Olympics-App/issues">Request Feature</a>
+    <a href="https://github.com/lewys-miugo/TwelveLabs-Olympics-App/issues">Request Feature</a>
   </p>
 </div>
 
@@ -111,7 +111,7 @@ Navigate to the Twelve Labs Playground
 Create a new index and select Marengo 2.6 as the Embedding Model
 Upload Olympic video clips to your index
 
-![index-creation](https://github.com/Hrishikesh332/TwelveLabs-Olympics-App/blob/main/src/index-creation.png)
+![index-creation](https://github.com/lewys-miugo/TwelveLabs-Olympics-App/blob/main/src/index-creation.png)
 
 Step 4 -
 
@@ -149,7 +149,7 @@ Detect and categorize specific events or behaviors in security camera footage.
 
 ## Feedback
 
-If you have any feedback, please reach out to us at **hriskikesh.yadav332@gmail.com**
+If you have any feedback, please reach out to us at **lewiswambugu01@gmail.com**
 
 
 ## License

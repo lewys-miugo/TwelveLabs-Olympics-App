@@ -24,7 +24,7 @@
     <li><a href="#Features">Features</a></li>
     <li><a href="#Tech-Stack">Tech Stack</a></li>
     <li><a href="#Instructions-on-running-project-locally">Instructions on running project locally</a></li>
-        <li><a href="#Usecase">Feedback</a></li>
+        <li><a href="#Usecases">Usecases</a></li>
     <li><a href="#Feedback">Feedback</a></li>
   </ol>
 </details>
@@ -119,7 +119,13 @@ Get your API Key from the [Twelve Labs Dashboard](https://playground.twelvelabs.
 Find your INDEX_ID in the URL of your created [index](https://playground.twelvelabs.io/indexes/{index_id})
 
 Step 5 -
-Configure the application with your API credentials by creating .env and adding API_KEY, INDEX_KEY and STREAMLIT_APP_URL=http://localhost:8501/ NB: When hosting with Streamlit remember to put them in TOML format.
+Configure the application with your API credentials by creating .env and add
+```
+ API_KEY=
+ INDEX_KEY=
+ STREAMLIT_APP_URL=http://localhost:8501/ 
+```
+NB: When hosting with Streamlit remember to put them in TOML format.
 
 Step 6 -
 

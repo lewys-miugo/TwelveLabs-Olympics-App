@@ -40,7 +40,7 @@ The Olympics Video Clips Classification Application is a powerful tool designed 
 
 Try the Application Now -
 
-<a href="https://twelvelabs-olympics-app.streamlit.app/" target="_blank" style="
+<a href="https://sports-detector.streamlit.app/" target="_blank" style="
     display: inline-block;
     padding: 12px 24px;
     font-size: 18px;

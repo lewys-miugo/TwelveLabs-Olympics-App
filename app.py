@@ -427,7 +427,7 @@ def main():
     </style>
     """, unsafe_allow_html=True)
 
-    st.markdown('<p class="big-font">🏅 Olympics Classification</p>', unsafe_allow_html=True)
+    st.markdown('<p class="big-font"> Sports Classification</p>', unsafe_allow_html=True)
     st.markdown('<p style="text-align: center; font-size: 18px; color: #4a5568; margin-bottom: 40px;">Powered by Twelve Labs AI • Discover Olympic moments with intelligent video search</p>', unsafe_allow_html=True)
 
     CLASSES = get_initial_classes() + get_custom_classes()

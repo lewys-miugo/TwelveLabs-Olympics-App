@@ -1,6 +1,5 @@
 import streamlit as st
 from twelvelabs import TwelveLabs
-from twelvelabs.models.search import SearchData, GroupByVideoSearchData
 import requests
 import os
 from dotenv import load_dotenv
@@ -84,33 +83,27 @@ def search_videos(selected_prompts, selected_class_names):
                               for cls in get_initial_classes() + get_custom_classes() 
                               if cls["name"] == class_name and prompt in cls["prompts"]), "Unknown")
             
-            result = client.search.query(
+            # Updated API call based on new SDK
+            search_pager = client.search.query(
                 index_id=INDEX_ID,
-                options=["visual", "audio"],
                 query_text=prompt,
-                group_by="video",
-                threshold="medium",
-                operator="or",
-                page_limit=5,
-                sort_option="score"
+                search_options=["visual", "audio"],
+                operator="or"
             )
             
-            print(f"Search response for prompt '{prompt}':")
-            print(f"  Total results: {result.page_info.total_results}")
-            print(f"  Index ID: {result.pool.index_id}")
-            print(f"  Total count in pool: {result.pool.total_count}")
+            # Convert pager to list for easier handling
+            results = list(search_pager)
             
-            if result.data and len(result.data) > 0:
-                print(f"  First result type: {type(result.data[0])}")
-                if isinstance(result.data[0], GroupByVideoSearchData) and result.data[0].clips:
-                    clip = result.data[0].clips[0]
-                    print(f"  Sample clip data: score={clip.score}, start={clip.start}, end={clip.end}")
-                    print(f"  Confidence type: {type(clip.confidence)}")
-                    print(f"  Confidence value: {clip.confidence}")
+            print(f"Search response for prompt '{prompt}':")
+            print(f"  Total results: {len(results)}")
+            
+            if results:
+                clip = results[0]
+                print(f"  Sample clip data: rank={getattr(clip, 'rank', 'N/A')}, start={clip.start}, end={clip.end}")
             
             results_by_prompt[prompt] = {
                 "class_name": class_name,
-                "result": result
+                "results": results
             }
         except Exception as e:
             st.error(f"API Error for prompt '{prompt}': {str(e)}")
@@ -464,12 +457,9 @@ def main():
                     
                     video_ids = set()
                     for prompt_data in results_by_prompt.values():
-                        result = prompt_data["result"]
-                        for item in result.data:
-                            if isinstance(item, GroupByVideoSearchData):
-                                video_ids.add(item.id)
-                            else:
-                                video_ids.add(item.video_id)
+                        results = prompt_data["results"]
+                        for clip in results:
+                            video_ids.add(clip.video_id)
                     
                     video_urls = get_video_urls(list(video_ids))
                     
@@ -485,7 +475,7 @@ def main():
                                 results_by_class[class_name] = []
                             results_by_class[class_name].append({
                                 "prompt": prompt,
-                                "result": prompt_data["result"]
+                                "results": prompt_data["results"]
                             })
                         
                         for class_name, class_results in results_by_class.items():
@@ -493,49 +483,54 @@ def main():
                             
                             for prompt_result in class_results:
                                 prompt = prompt_result["prompt"]
-                                result = prompt_result["result"]
+                                results = prompt_result["results"]
                                 
                                 st.markdown(f'<div class="prompt-header">Results for: "{prompt}"</div>', unsafe_allow_html=True)
                                 
+                                # Group results by video_id
+                                videos_dict = {}
+                                for clip in results:
+                                    if clip.video_id not in videos_dict:
+                                        videos_dict[clip.video_id] = []
+                                    videos_dict[clip.video_id].append(clip)
+                                
                                 video_count = 0
-                                for item in result.data:
-                                    if isinstance(item, GroupByVideoSearchData):
-                                        video_id = item.id
-                                        if not item.clips:
-                                            continue
-                                            
-                                        with st.expander(f"🎬 Video {video_count+1}: {video_id}", expanded=(video_count == 0)):
-                                            st.markdown('<div class="video-card">', unsafe_allow_html=True)
-                                            
-                                            for i, clip in enumerate(item.clips[:3]):
-                                                confidence_class = "confidence-high" if clip.confidence == "high" else "confidence-medium" if clip.confidence == "medium" else "confidence-low"
-                                                
-                                                # Convert seconds to minutes:seconds format
-                                                start_min, start_sec = divmod(int(float(clip.start)), 60)
-                                                end_min, end_sec = divmod(int(float(clip.end)), 60)
-                                                start_time = f"{start_min}:{start_sec:02d}"
-                                                end_time = f"{end_min}:{end_sec:02d}"
-                                                
-                                                st.markdown(f"""
-                                                <div class="video-meta">
-                                                    <strong>🎬 Clip {i+1}:</strong> {start_time} - {end_time} | 
-                                                    <strong>Score:</strong> {float(clip.score):.1f} | 
-                                                    <strong>Confidence:</strong> <span class="{confidence_class}">{clip.confidence}</span>
-                                                </div>
-                                                """, unsafe_allow_html=True)
-                                            
-                                            if video_id in video_urls:
-                                                render_video(video_urls[video_id], f"{class_name}-{prompt}-{video_count}")
-                                            else:
-                                                st.warning("⚠️ Video URL not available. Unable to render video.")
-                                            
-                                            st.markdown('</div>', unsafe_allow_html=True)
+                                for video_id, clips in videos_dict.items():
+                                    if video_count >= 3:
+                                        break
                                         
-                                        video_count += 1
-                                        if video_count >= 3:
-                                            break
+                                    with st.expander(f"🎬 Video {video_count+1}: {video_id}", expanded=(video_count == 0)):
+                                        st.markdown('<div class="video-card">', unsafe_allow_html=True)
+                                        
+                                        for i, clip in enumerate(clips[:3]):
+                                            # Handle both old (score/confidence) and new (rank) formats
+                                            rank_or_score = getattr(clip, 'rank', getattr(clip, 'score', 'N/A'))
+                                            confidence = getattr(clip, 'confidence', 'N/A')
+                                            
+                                            # Convert seconds to minutes:seconds format
+                                            start_min, start_sec = divmod(int(float(clip.start)), 60)
+                                            end_min, end_sec = divmod(int(float(clip.end)), 60)
+                                            start_time = f"{start_min}:{start_sec:02d}"
+                                            end_time = f"{end_min}:{end_sec:02d}"
+                                            
+                                            st.markdown(f"""
+                                            <div class="video-meta">
+                                                <strong>🎬 Clip {i+1}:</strong> {start_time} - {end_time} | 
+                                                <strong>Rank/Score:</strong> {rank_or_score} | 
+                                                <strong>Confidence:</strong> {confidence}
+                                            </div>
+                                            """, unsafe_allow_html=True)
+                                        
+                                        if video_id in video_urls:
+                                            render_video(video_urls[video_id], f"{class_name}-{prompt}-{video_count}")
+                                        else:
+                                            st.warning("⚠️ Video URL not available. Unable to render video.")
+                                        
+                                        st.markdown('</div>', unsafe_allow_html=True)
                                     
-                                if video_count == 0:
+                                    video_count += 1
+                                
+                                if not videos_dict:
                                     st.info(f"ℹ️ No videos found for prompt: {prompt}")
             else:
                 st.warning("⚠️ Please select at least one class.")
